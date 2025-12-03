@@ -1,15 +1,16 @@
-import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import { Container } from '@/components/container';
 import { Button } from '@/components/ui/button';
 import { PricingSection } from '@/features/pricing/components/pricing-section';
 
-export default async function HomePage({ searchParams }: { searchParams: { code?: string } }) {
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ code?: string }> }) {
   // Auto-redirect auth codes to callback route
-  if (searchParams.code) {
-    redirect(`/auth/callback?code=${searchParams.code}`);
+  const params = await searchParams;
+  if (params.code) {
+    redirect(`/auth/callback?code=${params.code}`);
   }
 
   return (
