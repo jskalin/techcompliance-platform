@@ -11,6 +11,7 @@ const siteUrl = getURL();
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
+  const next = requestUrl.searchParams.get('next') || '/';
 
   if (code) {
     const supabase = await createSupabaseServerClient();
@@ -31,12 +32,15 @@ export async function GET(request: NextRequest) {
       .in('status', ['trialing', 'active'])
       .maybeSingle();
 
+    // Redirect to pricing if no active subscription, otherwise to account or specified next page
     if (!userSubscription) {
       return NextResponse.redirect(`${siteUrl}/pricing`);
     } else {
-      return NextResponse.redirect(`${siteUrl}`);
+      const redirectTo = next === '/' ? '/account' : next;
+      return NextResponse.redirect(`${siteUrl}${redirectTo}`);
     }
   }
 
+  // If no code, redirect to home
   return NextResponse.redirect(siteUrl);
 }
