@@ -75,12 +75,16 @@ export function PricingCard({
         {!Boolean(price) && product.prices.length > 1 && <PricingSwitch onChange={handleBillingIntervalChange} />}
 
         <div className='m-auto flex w-fit flex-1 flex-col gap-2 px-8 py-4'>
-          {metadata.generatedImages === 'enterprise' && <CheckItem text={`Unlimited banner images`} />}
-          {metadata.generatedImages !== 'enterprise' && (
-            <CheckItem text={`Generate ${metadata.generatedImages} banner images`} />
+          {metadata.maxComplianceChecks === 'unlimited' ? (
+            <CheckItem text='Unlimited compliance checks' />
+          ) : (
+            <CheckItem text={`${metadata.maxComplianceChecks} compliance checks per month`} />
           )}
-          {<CheckItem text={`${metadata.imageEditor} image editing features`} />}
-          {<CheckItem text={`${metadata.supportLevel} support`} />}
+          <CheckItem text={`${metadata.features} compliance features`} />
+          <CheckItem text={`${metadata.supportLevel} support`} />
+          {metadata.apiAccess && <CheckItem text='REST API access' />}
+          {metadata.customReports && <CheckItem text='Custom compliance reports' />}
+          {metadata.prioritySupport && <CheckItem text='Priority support queue' />}
         </div>
 
         {createCheckoutAction && (
