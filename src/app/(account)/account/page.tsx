@@ -7,7 +7,7 @@ import { getSession } from '@/features/account/controllers/get-session';
 import { getSubscription } from '@/features/account/controllers/get-subscription';
 import { PricingCard } from '@/features/pricing/components/price-card';
 import { getProducts } from '@/features/pricing/controllers/get-products';
-import { Price, ProductWithPrices } from '@/features/pricing/types';
+import { Price, ProductWithPrices, SubscriptionWithProduct } from '@/features/pricing/types';
 
 export default async function AccountPage() {
   const [session, subscription, products] = await Promise.all([getSession(), getSubscription(), getProducts()]);
@@ -19,10 +19,10 @@ export default async function AccountPage() {
   let userProduct: ProductWithPrices | undefined;
   let userPrice: Price | undefined;
 
-  if (subscription) {
-    for (const product of products) {
+  if (subscription && products) {
+    for (const product of products as ProductWithPrices[]) {
       for (const price of product.prices) {
-        if (price.id === subscription.price_id) {
+        if (price.id === (subscription as SubscriptionWithProduct).price_id) {
           userProduct = product;
           userPrice = price;
         }
