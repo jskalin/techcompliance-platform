@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -5,7 +6,12 @@ import { Container } from '@/components/container';
 import { Button } from '@/components/ui/button';
 import { PricingSection } from '@/features/pricing/components/pricing-section';
 
-export default async function HomePage() {
+export default async function HomePage({ searchParams }: { searchParams: { code?: string } }) {
+  // Auto-redirect auth codes to callback route
+  if (searchParams.code) {
+    redirect(`/auth/callback?code=${searchParams.code}`);
+  }
+
   return (
     <div className='flex flex-col gap-8 lg:gap-32'>
       <HeroSection />
